@@ -3,3 +3,91 @@
 Growler is an educational web crawler.
 It's main purpose is to help me learn rails.
 
+== Desired Features
+
+* A web frontend for administrators
+* A Crawler
+* An analyzer
+
+=== Wishlist
+    
+* A web frontend for users
+* A REST api
+** Makeing the frontends frontends for _this_ api
+
+== Model/Outline
+
+
+* *DB* Data (Structures) stored in the DB
+* *Key* Data (Actual keys) stored in DB
+* *Jobs* jobs to be exectuted
+* *Code* executable code
+* *User* User Interface
+* *API* Application Programmer Interface
+* *List:<type>* List of elements 
+
+=== Schema
+
+* Data *SETTINGS*
+    Key       :: *max-dns* How often do we allow dns requests for the same url
+---------------------------------------
+* Data *Snapshot*
+    Key       :: *DOM*
+    Key       :: *timestamp*
+---------------------------------------
+* Data *URL*
+    Key       :: *URL*
+    Reference :: *Domain*
+* Data *Domain*
+    Key       :: *Domain*
+    Reference :: *IP*
+    Key       :: *Last Request* (timestamp)
+* Data *IP*
+    Key       :: *IP-Addr*
+    Key       :: *Last Request* (timestamp)
+----------------------------------------
+* *Jobs* (in general)
+    Key       :: *Priority* (float - 0 <= x <= 1 - Where to put this task in the Queue; 0 is front; 1 is last)
+    Key       :: *Repeat*   (bool - Should this job be repeated?)
+    Code      :: *invoke*
+* Jobs *Crawler*
+    # There is a crawler for every url
+    Reference :: *URL*
+* Jobs *Processing*
+    # There is a processing job for every snapshot for every data-mining plugin
+    Reference :: *Timestamp*
+
+=== Timeline
+
+1. Initialize database
+2. Create basic fetcher
+3. Extract urls and generate recoursive crawler jobs
+4. Add no-auth admin interface
+5. Add auth to admin interface
+6. Initiate crawler jobs from admin iface
+7. Add possibility to stop crawler
+8. Add index/search index
+
+=== Remarks
+
+* How do we organize the data-mining plugins? Their DB schemata?
+
+* Instad of handling dns in rails, use decent dns caching server?
+    * Multiple dns server? Loadbalancing?
+    -> Ignore DNS optimizations in the beginning
+* Support multiple IPs? IPv4/IPv6?
+* Time based jobs for dns (and timeouts) so all the timed events dont block the queue
+* Ignore non html? non text?
+* Proxys?
+* Crawling maxdepth?
+* Parameterized URLs?
+* Multithreading?
+* Non Blocking IO?
+
+== Links
+
+* https://github.com/defunkt/resque
+* https://github.com/jeffkreeftmeijer/navvy
+* https://github.com/collectiveidea/delayed_job
+
+ 
